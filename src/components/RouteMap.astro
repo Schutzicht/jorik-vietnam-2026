@@ -58,12 +58,19 @@ const mapDataJson = JSON.stringify(mapData);
     </div>
   </div>
 
-  <script type="module" define:vars={{ mapDataJson }}>
-    import L from "https://esm.sh/leaflet@1.9.4";
+  <script is:inline define:vars={{ mapDataJson }}>
+    function initRouteMap() {
+      if (typeof window.L === "undefined") {
+        window.setTimeout(initRouteMap, 60);
+        return;
+      }
+      const L = window.L;
+      const data = JSON.parse(mapDataJson);
+      const el = document.getElementById("route-map");
+      if (!el) return;
+      if (el.dataset.inited === "1") return;
+      el.dataset.inited = "1";
 
-    const data = JSON.parse(mapDataJson);
-    const el = document.getElementById("route-map");
-    if (el) {
       const map = L.map(el, {
         zoomControl: true,
         scrollWheelZoom: false,
@@ -127,6 +134,15 @@ const mapDataJson = JSON.stringify(mapData);
       }).addTo(map);
 
       map.fitBounds(bounds, { padding: [60, 60] });
+
+      // Recalculate after fonts/images settle - mobile-safe
+      window.setTimeout(() => map.invalidateSize(), 200);
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initRouteMap);
+    } else {
+      initRouteMap();
     }
   </script>
 </section>

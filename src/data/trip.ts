@@ -52,7 +52,7 @@ export const trip = {
   title: "Vietnam",
   duration: "~25 dagen",
   window: "Oktober 2026",
-  heroImage: unsplash("1555979864-7a8f9b4fddf8", 2000),
+  heroImage: unsplash("1652540755628-47f6c1480f0b", 2000),
   intent: "Solo, langzaam, ergens echt landen. Werk, surf, mensen.",
   flights: [
     {
