@@ -1,0 +1,199 @@
+---
+import { budgetTargets, stops } from "../data/trip";
+
+const totalNights = stops.reduce((s, n) => s + n.nights, 0);
+const dailyTarget = budgetTargets.reduce((s, c) => s + c.target, 0);
+const tripTarget = dailyTarget * totalNights;
+---
+
+<section id="budget" class="relative bg-[var(--color-night)] py-14 sm:py-20">
+  <div class="max-w-3xl mx-auto px-5 sm:px-8">
+    <div class="flex items-end justify-between gap-3 mb-6 sm:mb-8">
+      <div>
+        <div class="text-xs font-mono uppercase tracking-[0.22em] text-[var(--color-aqua)] mb-2">
+          Budget
+        </div>
+        <h2 class="font-display font-bold text-3xl sm:text-5xl leading-[1] tracking-tight">
+          Wat het kost.
+        </h2>
+      </div>
+    </div>
+
+    <div class="rounded-3xl bg-white border border-[var(--color-line)] overflow-hidden soft-shadow">
+      <div class="grid grid-cols-3 divide-x divide-[var(--color-line)] border-b border-[var(--color-line)]">
+        <div class="p-4 sm:p-5 text-center">
+          <div class="text-[10px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)] mb-1">Target / dag</div>
+          <div class="font-display font-bold text-xl sm:text-2xl tnum text-[var(--color-ink)]">€{dailyTarget}</div>
+        </div>
+        <div class="p-4 sm:p-5 text-center">
+          <div class="text-[10px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)] mb-1">Totaal trip</div>
+          <div class="font-display font-bold text-xl sm:text-2xl tnum text-[var(--color-ink)]">€{tripTarget}</div>
+        </div>
+        <div class="p-4 sm:p-5 text-center">
+          <div class="text-[10px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)] mb-1">Uitgegeven</div>
+          <div class="font-display font-bold text-xl sm:text-2xl tnum text-[var(--color-ink)]" data-budget-spent>€0</div>
+        </div>
+      </div>
+
+      <div class="p-4 sm:p-5 border-b border-[var(--color-line)]">
+        <form data-budget-form class="grid grid-cols-[1fr_auto_auto] sm:grid-cols-[1fr_140px_auto_auto] gap-2">
+          <input
+            type="text"
+            name="label"
+            placeholder="Wat? bv. Hostel, banh mi"
+            required
+            class="col-span-1 sm:col-span-1 px-3 py-2.5 rounded-xl bg-[var(--color-night)] border border-[var(--color-line)] text-sm text-[var(--color-ink)] placeholder:text-[var(--color-muted)] focus:outline-none focus:border-[var(--color-azure)]"
+          />
+          <select
+            name="category"
+            class="hidden sm:block px-3 py-2.5 rounded-xl bg-[var(--color-night)] border border-[var(--color-line)] text-sm text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-azure)]"
+          >
+            {budgetTargets.map((c) => <option value={c.name}>{c.name}</option>)}
+          </select>
+          <input
+            type="number"
+            name="amount"
+            step="0.01"
+            placeholder="€"
+            required
+            class="w-20 sm:w-24 px-3 py-2.5 rounded-xl bg-[var(--color-night)] border border-[var(--color-line)] text-sm text-[var(--color-ink)] placeholder:text-[var(--color-muted)] focus:outline-none focus:border-[var(--color-azure)] tnum"
+          />
+          <button type="submit" class="px-4 py-2.5 rounded-xl bg-[var(--color-azure)] text-white text-sm font-medium hover:bg-[var(--color-electric)] transition active:scale-95">
+            +
+          </button>
+        </form>
+        <div class="sm:hidden mt-2">
+          <select
+            name="category-mobile"
+            data-budget-category-mobile
+            class="w-full px-3 py-2 rounded-xl bg-[var(--color-night)] border border-[var(--color-line)] text-xs text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-azure)]"
+          >
+            {budgetTargets.map((c) => <option value={c.name}>{c.name}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <ul data-budget-list class="divide-y divide-[var(--color-line)] max-h-[280px] overflow-y-auto">
+        <li class="p-4 sm:p-5 text-center text-sm text-[var(--color-muted)]" data-budget-empty>
+          Nog geen uitgaven. Voeg er eentje toe ↑
+        </li>
+      </ul>
+
+      <div class="p-4 sm:p-5 bg-[var(--color-night)]/40 border-t border-[var(--color-line)]">
+        <div class="text-[10px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)] mb-3">Per categorie</div>
+        <div class="space-y-2.5">
+          {budgetTargets.map((c) => (
+            <div data-cat-row={c.name}>
+              <div class="flex justify-between items-baseline mb-1 text-xs">
+                <span class="font-medium text-[var(--color-ink)]">{c.name}</span>
+                <span class="font-mono tnum">
+                  <span data-cat-total={c.name} class="text-[var(--color-ink)]">€0</span>
+                  <span class="text-[var(--color-muted)]"> / €{c.target * totalNights}</span>
+                </span>
+              </div>
+              <div class="h-1.5 rounded-full bg-[var(--color-card)] overflow-hidden">
+                <div data-cat-bar={c.name} class="h-full bg-[var(--color-azure)] transition-all" style="width: 0%"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline define:vars={{ tripTarget }}>
+  (function () {
+    const KEY = "vn-budget-expenses";
+    const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch { return []; } };
+    const save = (data) => { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch {} };
+
+    let expenses = load();
+
+    const form = document.querySelector("[data-budget-form]");
+    const mobileCategory = document.querySelector("[data-budget-category-mobile]");
+    const list = document.querySelector("[data-budget-list]");
+    const emptyEl = document.querySelector("[data-budget-empty]");
+    const spentEl = document.querySelector("[data-budget-spent]");
+
+    const fmt = (n) => "€" + (Math.round(n * 100) / 100).toLocaleString("nl-NL");
+
+    const render = () => {
+      // Total spent
+      const total = expenses.reduce((s, e) => s + Number(e.amount || 0), 0);
+      if (spentEl) {
+        spentEl.textContent = fmt(total);
+        spentEl.style.color = total > tripTarget ? "var(--color-coral)" : "var(--color-ink)";
+      }
+
+      // List
+      if (!list) return;
+      list.querySelectorAll("li:not([data-budget-empty])").forEach((el) => el.remove());
+      if (expenses.length === 0) {
+        if (emptyEl) emptyEl.style.display = "block";
+      } else {
+        if (emptyEl) emptyEl.style.display = "none";
+        expenses.slice().reverse().forEach((exp, i) => {
+          const realIdx = expenses.length - 1 - i;
+          const li = document.createElement("li");
+          li.className = "flex items-center gap-3 p-3 sm:p-4 group";
+          li.innerHTML = `
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-medium text-[var(--color-ink)] truncate">${exp.label}</div>
+              <div class="text-[10px] font-mono uppercase tracking-[0.12em] text-[var(--color-muted)]">${exp.category} · ${exp.date}</div>
+            </div>
+            <div class="font-mono font-medium tnum text-sm text-[var(--color-ink)]">${fmt(exp.amount)}</div>
+            <button type="button" data-budget-delete="${realIdx}" class="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded text-[var(--color-muted)] hover:text-[var(--color-coral)]">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6M5 6l1 14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-14"/></svg>
+            </button>
+          `;
+          list.appendChild(li);
+        });
+        list.querySelectorAll("[data-budget-delete]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const idx = Number(btn.dataset.budgetDelete);
+            expenses.splice(idx, 1);
+            save(expenses);
+            render();
+          });
+        });
+      }
+
+      // Per category
+      document.querySelectorAll("[data-cat-row]").forEach((row) => {
+        const cat = row.dataset.catRow;
+        const totalCat = expenses.filter((e) => e.category === cat).reduce((s, e) => s + Number(e.amount || 0), 0);
+        const targetEl = row.querySelector("[data-cat-bar]");
+        const totalEl = row.querySelector("[data-cat-total]");
+        const targetTotal = Number(targetEl?.parentElement?.parentElement?.querySelector(".text-[var(--color-muted)]")?.textContent?.replace(/[^0-9]/g, "") || 0);
+        const pct = targetTotal > 0 ? Math.min(100, (totalCat / targetTotal) * 100) : 0;
+        if (targetEl) {
+          targetEl.style.width = pct + "%";
+          targetEl.style.background = pct > 100 ? "var(--color-coral)" : pct > 80 ? "var(--color-sun)" : "var(--color-azure)";
+        }
+        if (totalEl) totalEl.textContent = fmt(totalCat);
+      });
+    };
+
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const desktopCat = fd.get("category");
+      const cat = desktopCat || mobileCategory?.value || "Overig";
+      const label = (fd.get("label") || "").toString().trim();
+      const amount = Number(fd.get("amount"));
+      if (!label || !amount) return;
+      expenses.push({
+        label,
+        category: cat,
+        amount,
+        date: new Date().toISOString().slice(0, 10)
+      });
+      save(expenses);
+      form.reset();
+      render();
+    });
+
+    render();
+  })();
+</script>

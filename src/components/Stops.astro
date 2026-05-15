@@ -5,13 +5,25 @@ import StopCard from "./StopCard.astro";
 
 <section id="stops" class="relative bg-[var(--color-night)] py-14 sm:py-20">
   <div class="max-w-3xl mx-auto px-5 sm:px-8">
-    <div class="mb-10 sm:mb-14">
-      <div class="text-xs font-mono uppercase tracking-[0.22em] text-[var(--color-aqua)] mb-2">
-        Reis
+    <div class="mb-10 sm:mb-14 flex items-end justify-between gap-3">
+      <div>
+        <div class="text-xs font-mono uppercase tracking-[0.22em] text-[var(--color-aqua)] mb-2">
+          Reis
+        </div>
+        <h2 class="font-display font-bold text-3xl sm:text-5xl leading-[1] tracking-tight">
+          Drie stops.
+        </h2>
       </div>
-      <h2 class="font-display font-bold text-3xl sm:text-5xl leading-[1] tracking-tight">
-        Drie stops.
-      </h2>
+      <button
+        type="button"
+        data-stories-open
+        class="inline-flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full bg-[var(--color-azure)] text-white text-xs sm:text-sm font-medium hover:bg-[var(--color-electric)] active:scale-95 transition shadow-[0_4px_12px_-2px_rgba(2,132,199,0.35)] shrink-0"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="6" width="6" height="12" rx="1"/><rect x="11" y="3" width="10" height="18" rx="1"/>
+        </svg>
+        <span>Stories</span>
+      </button>
     </div>
 
     <div class="space-y-12 sm:space-y-16">
@@ -101,6 +113,32 @@ import StopCard from "./StopCard.astro";
         } catch {
           // localStorage quota / privacy mode
         }
+      }, 350);
+    });
+  });
+
+  // Day planner: localStorage per stop-dayNum
+  const dayKey = (k: string) => `vietnam-trip-day-${k}`;
+  document.querySelectorAll<HTMLTextAreaElement>("[data-day-input]").forEach((input) => {
+    const k = input.dataset.dayInput;
+    if (!k) return;
+    const saved = localStorage.getItem(dayKey(k));
+    if (saved) input.value = saved;
+
+    const filledBadge = document.querySelector<HTMLElement>(`[data-day-filled="${k}"]`);
+    const setBadge = () => {
+      if (filledBadge) filledBadge.classList.toggle("hidden", !input.value.trim());
+    };
+    setBadge();
+
+    let t: number | undefined;
+    input.addEventListener("input", () => {
+      if (t) window.clearTimeout(t);
+      t = window.setTimeout(() => {
+        try {
+          localStorage.setItem(dayKey(k), input.value);
+          setBadge();
+        } catch {}
       }, 350);
     });
   });

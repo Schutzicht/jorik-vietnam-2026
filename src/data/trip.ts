@@ -52,6 +52,8 @@ export const trip = {
   title: "Vietnam",
   duration: "~25 dagen",
   window: "Oktober 2026",
+  startDate: "2026-10-01",
+  endDate: "2026-10-25",
   heroImage: unsplash("1652540755628-47f6c1480f0b", 2000),
   intent: "Even uit Nederland weg. Drie weken in Vietnam om te surfen, in een lager tempo te werken, en ergens lang genoeg blijven om niet elke paar dagen te verkassen. Vibe-wise zoek ik iets als Canggu, maar minder toeristisch.",
   flights: [
@@ -351,6 +353,72 @@ export const stops: Stop[] = [
     ],
     photos: []
   }
+];
+
+export interface POI {
+  name: string;
+  type: "surf" | "food" | "cowork" | "photo" | "stay";
+  coords: Coord;
+  stopId: string;
+  note?: string;
+}
+
+export const pois: POI[] = [
+  // Da Nang surf
+  { name: "My Khe Beach", type: "surf", coords: [16.0654, 108.2480], stopId: "danang", note: "Hoofdspot, sandbar peaks" },
+  { name: "Bac My An", type: "surf", coords: [16.0364, 108.2492], stopId: "danang", note: "Minder druk" },
+  { name: "Non Nuoc", type: "surf", coords: [16.0072, 108.2618], stopId: "danang", note: "Pittiger swell" },
+  // Da Nang cowork
+  { name: "The Hub Da Nang", type: "cowork", coords: [16.0594, 108.2444], stopId: "danang", note: "Community hub" },
+  { name: "43 Factory Coffee", type: "cowork", coords: [16.0506, 108.2436], stopId: "danang" },
+  { name: "Nam House Coffee", type: "cowork", coords: [16.0578, 108.2434], stopId: "danang" },
+  // Da Nang food
+  { name: "Mi Quang 1A", type: "food", coords: [16.0593, 108.2122], stopId: "danang", note: "Lokale spec" },
+  { name: "Banh Xeo Ba Duong", type: "food", coords: [16.0556, 108.2153], stopId: "danang" },
+  { name: "Bun Cha Ca Ba Vy", type: "food", coords: [16.0744, 108.2208], stopId: "danang" },
+  // Da Nang photo
+  { name: "Marble Mountains", type: "photo", coords: [16.0036, 108.2628], stopId: "danang" },
+  { name: "Son Tra Peninsula", type: "photo", coords: [16.1186, 108.2966], stopId: "danang" },
+  // Hanoi
+  { name: "Pho Gia Truyen", type: "food", coords: [21.0353, 105.8489], stopId: "hanoi" },
+  { name: "The Note Coffee", type: "cowork", coords: [21.0306, 105.8516], stopId: "hanoi" },
+  { name: "Toong Coworking", type: "cowork", coords: [21.0220, 105.8489], stopId: "hanoi" },
+  { name: "Train Street", type: "photo", coords: [21.0288, 105.8467], stopId: "hanoi" },
+  // HCMC
+  { name: "Banh Mi Huynh Hoa", type: "food", coords: [10.7770, 106.6885], stopId: "hcmc" },
+  { name: "The Workshop Coffee", type: "cowork", coords: [10.7757, 106.7036], stopId: "hcmc" },
+  { name: "Social Club Saigon", type: "photo", coords: [10.7716, 106.7026], stopId: "hcmc", note: "Rooftop" }
+];
+
+export const packingList = [
+  { category: "Kleding", items: ["3-4x T-shirt quick-dry", "2x boardshort / bikini", "1x rashguard / lycra", "1x lange broek (tempels)", "1x hoodie", "Slippers + 1x sneaker", "Ondergoed (5-7x)", "1x regenjas"] },
+  { category: "Tech", items: ["Laptop + lader", "Powerbank (10000+ mAh)", "Universele adapter", "Telefoon-lader (USB-C)", "Hoofdtelefoon", "GoPro / camera (optioneel)", "E-reader (optioneel)"] },
+  { category: "Surf", items: ["Wax + leash (bagage-safe)", "Reef-safe zonnebrand", "Surf-cap / hat", "Quick-dry handdoek"] },
+  { category: "Documenten", items: ["Paspoort (geldig 6m+)", "E-visum print", "Reisverzekering kaart", "Vluchtbevestigingen", "Hostel-bookings (eerste paar nachten)"] },
+  { category: "Health", items: ["Imodium / loperamide", "Pijnstillers", "Plakkers + desinfectie", "Muggenspray DEET", "Slaapmasker + oordoppen"] },
+  { category: "Voor vertrek", items: ["Visum aanvragen 2-3w van tevoren", "Reisverzekering checken", "Wise / Revolut kaart geactiveerd", "eSIM of fysieke SIM regelen", "Bank waarschuwen voor reizen", "App van Grab installeren"] }
+];
+
+export interface BudgetCategory {
+  name: string;
+  target: number;
+}
+
+export const budgetTargets: BudgetCategory[] = [
+  { name: "Slapen", target: 25 },
+  { name: "Eten", target: 20 },
+  { name: "Transport", target: 8 },
+  { name: "Surf", target: 8 },
+  { name: "Cowork", target: 4 },
+  { name: "Activiteiten", target: 10 },
+  { name: "Overig", target: 5 }
+];
+
+export const moodOptions = [
+  { id: "surf", label: "Surf", icon: '<path d="M2 16c3-2 5-2 8 0s5 2 8 0 3-2 4-2"/><path d="M6 11c2 0 3 2 6 2s4-2 6-2 2 1 4 1"/>', recommends: ["surf"] },
+  { id: "werk", label: "Werk", icon: '<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 18v3"/>', recommends: ["cowork"] },
+  { id: "verkennen", label: "Verkennen", icon: '<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>', recommends: ["photo", "food"] },
+  { id: "chill", label: "Chillen", icon: '<path d="M12 2v6"/><path d="M19 7l-3 4-4-2-4 2-3-4"/><path d="M5 22V11h14v11"/>', recommends: ["food"] }
 ];
 
 export const practical = [

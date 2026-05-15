@@ -1,0 +1,110 @@
+---
+import { moodOptions } from "../data/trip";
+---
+
+<section class="bg-[var(--color-night)] pt-8 sm:pt-10">
+  <div class="max-w-3xl mx-auto px-5 sm:px-8">
+    <div class="rounded-3xl bg-gradient-to-br from-[var(--color-azure)]/8 via-[var(--color-deep)] to-[var(--color-aqua)]/10 border border-[var(--color-line)] p-5 sm:p-6 soft-shadow">
+      <div class="flex items-start justify-between gap-3 mb-4">
+        <div>
+          <div class="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--color-aqua)] mb-1">
+            Vibe-check
+          </div>
+          <h3 class="font-display font-bold text-lg sm:text-2xl leading-tight tracking-tight text-[var(--color-ink)]">
+            Wat voor dag is het?
+          </h3>
+          <p class="text-xs text-[var(--color-muted)] mt-1" data-mood-meta>
+            Tik wat je voelt &mdash; ik markeer de spots
+          </p>
+        </div>
+        <button type="button" data-mood-reset class="text-[10px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)] hover:text-[var(--color-ink)] transition hidden">
+          Reset
+        </button>
+      </div>
+
+      <div class="grid grid-cols-4 gap-2 sm:gap-3">
+        {moodOptions.map((mood) => (
+          <button
+            type="button"
+            data-mood={mood.id}
+            class="mood-btn relative flex flex-col items-center gap-2 p-3 sm:p-4 rounded-2xl border border-[var(--color-line)] bg-[var(--color-deep)] hover:border-[var(--color-azure)]/40 active:scale-95 transition"
+          >
+            <span class="mood-icon w-10 h-10 sm:w-11 sm:h-11 rounded-xl grid place-items-center bg-[var(--color-azure)]/10 border border-[var(--color-azure)]/25 text-[var(--color-aqua)] transition">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={mood.icon} />
+            </span>
+            <span class="text-xs font-medium text-[var(--color-ink)]">{mood.label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    const KEY = "vn-trip-mood";
+    const today = new Date().toISOString().slice(0, 10);
+    const stored = (() => {
+      try {
+        const raw = localStorage.getItem(KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        return parsed.date === today ? parsed.mood : null;
+      } catch {
+        return null;
+      }
+    })();
+
+    const buttons = document.querySelectorAll("[data-mood]");
+    const meta = document.querySelector("[data-mood-meta]");
+    const resetBtn = document.querySelector("[data-mood-reset]");
+
+    const labelFor = (id) => {
+      const b = document.querySelector(`[data-mood="${id}"]`);
+      return b ? b.textContent.trim() : id;
+    };
+
+    const apply = (id) => {
+      buttons.forEach((b) => {
+        const active = b.dataset.mood === id;
+        b.classList.toggle("ring-2", active);
+        b.classList.toggle("ring-[var(--color-azure)]", active);
+        b.classList.toggle("border-[var(--color-azure)]/60", active);
+        const icon = b.querySelector(".mood-icon");
+        if (icon) {
+          if (active) {
+            icon.classList.add("bg-[var(--color-azure)]", "text-white");
+            icon.classList.remove("bg-[var(--color-azure)]/10", "text-[var(--color-aqua)]");
+          } else {
+            icon.classList.remove("bg-[var(--color-azure)]", "text-white");
+            icon.classList.add("bg-[var(--color-azure)]/10", "text-[var(--color-aqua)]");
+          }
+        }
+      });
+
+      // Update meta line + dispatch event for map / others to filter
+      if (id && meta) meta.textContent = `Mood vandaag: ${labelFor(id)}`;
+      if (resetBtn) resetBtn.classList.toggle("hidden", !id);
+
+      window.dispatchEvent(new CustomEvent("mood:change", { detail: id }));
+    };
+
+    buttons.forEach((b) => {
+      b.addEventListener("click", () => {
+        const id = b.dataset.mood;
+        try {
+          localStorage.setItem(KEY, JSON.stringify({ date: today, mood: id }));
+        } catch {}
+        apply(id);
+      });
+    });
+
+    resetBtn?.addEventListener("click", () => {
+      try { localStorage.removeItem(KEY); } catch {}
+      apply(null);
+      if (meta) meta.textContent = "Tik wat je voelt — ik markeer de spots";
+    });
+
+    if (stored) apply(stored);
+  })();
+</script>

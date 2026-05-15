@@ -1,5 +1,6 @@
 ---
 import type { Stop } from "../data/trip";
+import SurfForecast from "./SurfForecast.astro";
 
 interface Props {
   stop: Stop;
@@ -105,7 +106,7 @@ const iconPath = (name: string) => {
     <div data-stop-detail class="hidden">
       <div class="border-t border-[var(--color-line)]">
         <div class="flex gap-1 p-2 overflow-x-auto no-scrollbar" role="tablist" data-tabs={stop.id}>
-          {["Overzicht", "Notities", "Documenten", "Foto's"].map((label, i) => (
+          {["Overzicht", "Dagen", "Notities", "Documenten", "Foto's"].map((label, i) => (
             <button
               type="button"
               role="tab"
@@ -137,6 +138,12 @@ const iconPath = (name: string) => {
               ))}
             </div>
           </div>
+
+          {stop.id === "danang" && (
+            <div class="mb-6">
+              <SurfForecast />
+            </div>
+          )}
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {overviewBlocks.map((block) => (
@@ -188,6 +195,35 @@ const iconPath = (name: string) => {
         </div>
 
         <div role="tabpanel" data-tab-panel="1" class="p-5 sm:p-6 pt-2 hidden">
+          <div class="mb-4">
+            <div class="text-sm font-semibold text-[var(--color-ink)]">Dagen plannen</div>
+            <div class="text-xs text-[var(--color-muted)]">Per dag een korte planning &mdash; lokaal opgeslagen</div>
+          </div>
+          <div class="space-y-3">
+            {Array.from({ length: stop.nights }, (_, i) => i + 1).map((dayNum) => (
+              <details class="group bg-[var(--color-night)] border border-[var(--color-line)] rounded-2xl overflow-hidden">
+                <summary class="flex items-center gap-3 p-4 cursor-pointer list-none">
+                  <span class="w-8 h-8 rounded-lg grid place-items-center bg-[var(--color-azure)]/10 border border-[var(--color-azure)]/30 text-xs font-display font-bold text-[var(--color-aqua)]">D{dayNum}</span>
+                  <span class="flex-1 text-sm font-medium text-[var(--color-ink)]">Dag {dayNum}</span>
+                  <span class="text-[10px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)] hidden" data-day-filled={`${stop.id}-${dayNum}`}>● Gevuld</span>
+                  <svg class="transition-transform group-open:rotate-180" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-muted)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m6 9 6 6 6-6"/>
+                  </svg>
+                </summary>
+                <div class="px-4 pb-4">
+                  <textarea
+                    data-day-input={`${stop.id}-${dayNum}`}
+                    placeholder="Ochtend: …&#10;Middag: …&#10;Avond: …"
+                    rows="4"
+                    class="w-full bg-[var(--color-deep)] border border-[var(--color-line)] rounded-xl p-3 text-sm text-[var(--color-ink)] placeholder:text-[var(--color-muted)] focus:outline-none focus:border-[var(--color-azure)] resize-y leading-relaxed"
+                  ></textarea>
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+
+        <div role="tabpanel" data-tab-panel="2" class="p-5 sm:p-6 pt-2 hidden">
           <div class="flex items-center justify-between mb-3">
             <div>
               <div class="text-sm font-semibold text-[var(--color-ink)]">Notities</div>
@@ -206,7 +242,7 @@ const iconPath = (name: string) => {
           ></textarea>
         </div>
 
-        <div role="tabpanel" data-tab-panel="2" class="p-5 sm:p-6 pt-2 hidden">
+        <div role="tabpanel" data-tab-panel="3" class="p-5 sm:p-6 pt-2 hidden">
           <div class="flex items-center justify-between mb-3">
             <div>
               <div class="text-sm font-semibold text-[var(--color-ink)]">Documenten</div>
@@ -251,7 +287,7 @@ const iconPath = (name: string) => {
           )}
         </div>
 
-        <div role="tabpanel" data-tab-panel="3" class="p-5 sm:p-6 pt-2 hidden">
+        <div role="tabpanel" data-tab-panel="4" class="p-5 sm:p-6 pt-2 hidden">
           <div class="flex items-center justify-between mb-3">
             <div>
               <div class="text-sm font-semibold text-[var(--color-ink)]">Foto's</div>

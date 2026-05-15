@@ -1,0 +1,119 @@
+---
+// Da Nang My Khe lat/lng
+const lat = 16.0654;
+const lng = 108.248;
+---
+
+<div class="rounded-2xl bg-gradient-to-br from-[var(--color-azure)]/8 via-white to-[var(--color-aqua)]/8 border border-[var(--color-line)] overflow-hidden">
+  <div class="flex items-center justify-between gap-3 p-4 sm:p-5 border-b border-[var(--color-line)]">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl grid place-items-center bg-[var(--color-azure)]/15 border border-[var(--color-azure)]/30">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-aqua)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 16c3-2 5-2 8 0s5 2 8 0 3-2 4-2"/><path d="M6 11c2 0 3 2 6 2s4-2 6-2 2 1 4 1"/>
+        </svg>
+      </div>
+      <div>
+        <div class="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--color-muted)]">Surf forecast · My Khe</div>
+        <div class="text-sm font-semibold text-[var(--color-ink)]">Live, 3-daagse</div>
+      </div>
+    </div>
+    <span class="text-[10px] font-mono uppercase tracking-[0.15em] text-[var(--color-aqua)]" data-forecast-status>...</span>
+  </div>
+
+  <div data-forecast-grid class="grid grid-cols-3 gap-px bg-[var(--color-line)] min-h-[120px]">
+    <div class="bg-white p-4 grid place-items-center text-xs text-[var(--color-muted)] col-span-3">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-[var(--color-aqua)] animate-pulse"></span>
+        Forecast ophalen…
+      </div>
+    </div>
+  </div>
+
+  <div class="p-3 sm:p-4 border-t border-[var(--color-line)] text-[10px] text-[var(--color-muted)] flex items-center justify-between gap-2">
+    <span>Bron: Open-Meteo Marine</span>
+    <a href="https://www.windy.com/?16.065,108.248,12" target="_blank" rel="noopener" class="text-[var(--color-azure)] hover:text-[var(--color-electric)] transition">Windy details &rarr;</a>
+  </div>
+</div>
+
+<script is:inline define:vars={{ lat, lng }}>
+  (function () {
+    const grid = document.querySelector("[data-forecast-grid]");
+    const status = document.querySelector("[data-forecast-status]");
+    if (!grid) return;
+
+    const cacheKey = "vn-surf-forecast";
+    const cached = (() => {
+      try {
+        const raw = sessionStorage.getItem(cacheKey);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (Date.now() - parsed.ts > 3600 * 1000) return null;
+        return parsed.data;
+      } catch {
+        return null;
+      }
+    })();
+
+    const dayName = (idx) => {
+      const d = new Date();
+      d.setDate(d.getDate() + idx);
+      if (idx === 0) return "Vandaag";
+      if (idx === 1) return "Morgen";
+      return d.toLocaleDateString("nl-NL", { weekday: "short" });
+    };
+
+    const ratingFor = (h) => {
+      if (h == null) return { label: "—", color: "var(--color-muted)" };
+      if (h < 0.4) return { label: "Klein", color: "#94a3b8" };
+      if (h < 0.8) return { label: "OK", color: "#10b981" };
+      if (h < 1.5) return { label: "Fun", color: "#0284c7" };
+      if (h < 2.2) return { label: "Pittig", color: "#f59e0b" };
+      return { label: "Groot", color: "#e85a4f" };
+    };
+
+    const render = (daily) => {
+      const html = daily.slice(0, 3).map((d, i) => {
+        const rating = ratingFor(d.height);
+        return `
+          <div class="bg-white p-4 flex flex-col items-center text-center gap-1">
+            <div class="text-[10px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)]">${dayName(i)}</div>
+            <div class="font-display font-bold text-2xl tnum text-[var(--color-ink)]">${d.height != null ? d.height.toFixed(1) : "—"}<span class="text-xs text-[var(--color-muted)] ml-1">m</span></div>
+            <div class="text-[10px] font-medium uppercase tracking-[0.1em]" style="color: ${rating.color}">${rating.label}</div>
+            <div class="text-[10px] text-[var(--color-muted)] mt-0.5">${d.period != null ? d.period.toFixed(0) + "s · " + Math.round(d.dir) + "°" : "—"}</div>
+          </div>
+        `;
+      }).join("");
+      grid.innerHTML = html;
+    };
+
+    const fetchForecast = async () => {
+      if (cached) {
+        render(cached);
+        if (status) status.textContent = "Gecached";
+        return;
+      }
+      try {
+        const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lng}&daily=wave_height_max,wave_direction_dominant,wave_period_max&timezone=Asia/Bangkok&forecast_days=3`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Bad response");
+        const data = await res.json();
+        const daily = (data?.daily?.time || []).map((_, i) => ({
+          height: data.daily.wave_height_max?.[i],
+          dir: data.daily.wave_direction_dominant?.[i],
+          period: data.daily.wave_period_max?.[i]
+        }));
+        if (daily.length === 0) throw new Error("Empty");
+        sessionStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: daily }));
+        render(daily);
+        if (status) status.textContent = "Live";
+      } catch {
+        grid.innerHTML = `<div class="bg-white p-4 grid place-items-center text-xs text-[var(--color-muted)] col-span-3 text-center">
+          Forecast onbereikbaar. Check <a href="https://www.windy.com/?16.065,108.248,12" target="_blank" rel="noopener" style="color: var(--color-azure)">Windy</a> direct.
+        </div>`;
+        if (status) status.textContent = "Offline";
+      }
+    };
+
+    fetchForecast();
+  })();
+</script>

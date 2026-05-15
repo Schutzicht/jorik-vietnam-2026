@@ -1,0 +1,107 @@
+---
+import { trip } from "../data/trip";
+---
+
+<section class="relative bg-[var(--color-deep)] border-y border-[var(--color-line)]">
+  <div class="max-w-3xl mx-auto px-5 sm:px-8 py-3">
+    <div class="grid grid-cols-3 gap-3 sm:gap-6 items-center text-center sm:text-left">
+      <div>
+        <div class="text-[9px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)]">Vertrek</div>
+        <div class="font-display font-bold text-base sm:text-xl tnum text-[var(--color-ink)]" data-countdown>—</div>
+        <div class="text-[10px] text-[var(--color-muted)]" data-countdown-label>dagen</div>
+      </div>
+      <div class="text-center">
+        <div class="text-[9px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)]">Vietnam · NL</div>
+        <div class="font-display font-bold text-base sm:text-xl tnum text-[var(--color-ink)]">
+          <span data-time-vn>—</span>
+          <span class="text-[var(--color-muted)] mx-0.5 sm:mx-1 font-normal">/</span>
+          <span data-time-nl>—</span>
+        </div>
+        <div class="text-[10px] text-[var(--color-muted)]">+5u tijdsverschil</div>
+      </div>
+      <div class="text-right sm:text-left">
+        <div class="text-[9px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)]">€1 =</div>
+        <div class="font-display font-bold text-base sm:text-xl tnum text-[var(--color-ink)]" data-rate>—</div>
+        <div class="text-[10px] text-[var(--color-muted)]"><span data-rate-source>VND</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline define:vars={{ startDate: trip.startDate }}>
+  (function () {
+    const fmtTime = (tz) => {
+      try {
+        return new Intl.DateTimeFormat("nl-NL", {
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZone: tz,
+          hour12: false
+        }).format(new Date());
+      } catch {
+        return "—";
+      }
+    };
+
+    const updateClocks = () => {
+      const vn = document.querySelector("[data-time-vn]");
+      const nl = document.querySelector("[data-time-nl]");
+      if (vn) vn.textContent = fmtTime("Asia/Ho_Chi_Minh");
+      if (nl) nl.textContent = fmtTime("Europe/Amsterdam");
+    };
+
+    const updateCountdown = () => {
+      const start = new Date(startDate + "T00:00:00");
+      const now = new Date();
+      const diff = Math.ceil((start.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      const cd = document.querySelector("[data-countdown]");
+      const cdLabel = document.querySelector("[data-countdown-label]");
+      if (!cd || !cdLabel) return;
+      if (diff > 0) {
+        cd.textContent = String(diff);
+        cdLabel.textContent = diff === 1 ? "dag" : "dagen";
+      } else if (diff === 0) {
+        cd.textContent = "0";
+        cdLabel.textContent = "vandaag!";
+      } else if (diff >= -25) {
+        cd.textContent = String(Math.abs(diff));
+        cdLabel.textContent = "dag onderweg";
+      } else {
+        cd.textContent = "done";
+        cdLabel.textContent = "trip voorbij";
+      }
+    };
+
+    const fetchRate = async () => {
+      const cached = sessionStorage.getItem("vn-rate-eur-vnd");
+      const cachedTs = sessionStorage.getItem("vn-rate-ts");
+      const rateEl = document.querySelector("[data-rate]");
+      const srcEl = document.querySelector("[data-rate-source]");
+      if (!rateEl) return;
+
+      if (cached && cachedTs && Date.now() - Number(cachedTs) < 3600 * 1000) {
+        rateEl.textContent = Number(cached).toLocaleString("nl-NL", { maximumFractionDigits: 0 }) + " ₫";
+        return;
+      }
+
+      try {
+        const res = await fetch("https://open.er-api.com/v6/latest/EUR");
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        const vnd = data?.rates?.VND;
+        if (typeof vnd !== "number") throw new Error();
+        rateEl.textContent = vnd.toLocaleString("nl-NL", { maximumFractionDigits: 0 }) + " ₫";
+        sessionStorage.setItem("vn-rate-eur-vnd", String(vnd));
+        sessionStorage.setItem("vn-rate-ts", String(Date.now()));
+      } catch {
+        rateEl.textContent = "~27.000 ₫";
+        if (srcEl) srcEl.textContent = "VND (indicatie)";
+      }
+    };
+
+    updateClocks();
+    updateCountdown();
+    fetchRate();
+    setInterval(updateClocks, 30000);
+  })();
+</script>
