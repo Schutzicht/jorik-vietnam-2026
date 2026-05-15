@@ -1,5 +1,24 @@
 ---
 import { moodOptions } from "../data/trip";
+
+const moodSuggestions: Record<string, { tag: string; tip: string }> = {
+  surf: {
+    tag: "Surf vandaag",
+    tip: "Surf-spots staan nu aan op de kaart. Check de surf forecast voor My Khe in het Da Nang detail-blok."
+  },
+  werk: {
+    tag: "Werk-focus",
+    tip: "Co-working spots staan aan op de kaart. Doe een sessie bij The Hub of een cafe als 43 Factory."
+  },
+  verkennen: {
+    tag: "Verkennen",
+    tip: "Foto-spots en eet-tentjes staan aan op de kaart. Marble Mountains of Son Tra scooter rit zijn goeie keuzes."
+  },
+  chill: {
+    tag: "Chill-modus",
+    tip: "Eet-tentjes staan aan op de kaart. Pak een lokale spec, geen agenda."
+  }
+};
 ---
 
 <section class="bg-[var(--color-night)] pt-8 sm:pt-10">
@@ -13,8 +32,8 @@ import { moodOptions } from "../data/trip";
           <h3 class="font-display font-bold text-lg sm:text-2xl leading-tight tracking-tight text-[var(--color-ink)]">
             Wat voor dag is het?
           </h3>
-          <p class="text-xs text-[var(--color-muted)] mt-1" data-mood-meta>
-            Tik wat je voelt, ik markeer de spots
+          <p class="text-xs text-[var(--color-muted)] mt-1">
+            Past de kaart-pins aan op wat je vandaag wilt doen
           </p>
         </div>
         <button type="button" data-mood-reset class="text-[10px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)] hover:text-[var(--color-ink)] transition hidden">
@@ -36,11 +55,31 @@ import { moodOptions } from "../data/trip";
           </button>
         ))}
       </div>
+
+      <div data-mood-feedback class="hidden mt-4 rounded-2xl border border-[var(--color-azure)]/40 bg-[var(--color-azure)]/5 p-4 sm:p-5">
+        <div class="flex items-start gap-3">
+          <div class="w-9 h-9 rounded-xl grid place-items-center bg-[var(--color-azure)] text-white shrink-0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--color-aqua)]" data-mood-tag></div>
+            <p class="text-sm text-[var(--color-ink)] leading-relaxed mt-0.5" data-mood-tip></p>
+            <a href="#kaart" class="inline-flex items-center gap-1.5 mt-3 text-xs font-medium text-[var(--color-azure)] hover:text-[var(--color-electric)] transition">
+              Naar de kaart
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<script is:inline>
+<script is:inline define:vars={{ moodSuggestions }}>
   (function () {
     const KEY = "vn-trip-mood";
     const today = new Date().toISOString().slice(0, 10);
@@ -56,13 +95,10 @@ import { moodOptions } from "../data/trip";
     })();
 
     const buttons = document.querySelectorAll("[data-mood]");
-    const meta = document.querySelector("[data-mood-meta]");
     const resetBtn = document.querySelector("[data-mood-reset]");
-
-    const labelFor = (id) => {
-      const b = document.querySelector(`[data-mood="${id}"]`);
-      return b ? b.textContent.trim() : id;
-    };
+    const feedback = document.querySelector("[data-mood-feedback]");
+    const tagEl = document.querySelector("[data-mood-tag]");
+    const tipEl = document.querySelector("[data-mood-tip]");
 
     const apply = (id) => {
       buttons.forEach((b) => {
@@ -82,10 +118,15 @@ import { moodOptions } from "../data/trip";
         }
       });
 
-      // Update meta line + dispatch event for map / others to filter
-      if (id && meta) meta.textContent = `Mood vandaag: ${labelFor(id)}`;
-      if (resetBtn) resetBtn.classList.toggle("hidden", !id);
+      if (id && moodSuggestions[id]) {
+        if (tagEl) tagEl.textContent = moodSuggestions[id].tag;
+        if (tipEl) tipEl.textContent = moodSuggestions[id].tip;
+        feedback?.classList.remove("hidden");
+      } else {
+        feedback?.classList.add("hidden");
+      }
 
+      if (resetBtn) resetBtn.classList.toggle("hidden", !id);
       window.dispatchEvent(new CustomEvent("mood:change", { detail: id }));
     };
 
@@ -102,7 +143,6 @@ import { moodOptions } from "../data/trip";
     resetBtn?.addEventListener("click", () => {
       try { localStorage.removeItem(KEY); } catch {}
       apply(null);
-      if (meta) meta.textContent = "Tik wat je voelt, ik markeer de spots";
     });
 
     if (stored) apply(stored);

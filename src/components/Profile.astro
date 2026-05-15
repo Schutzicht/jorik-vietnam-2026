@@ -13,13 +13,22 @@ const traits = [
 
 <section class="relative bg-[var(--color-night)] py-8 sm:py-12">
   <div class="max-w-3xl mx-auto px-5 sm:px-8">
-    <div class="flex items-baseline justify-between mb-5">
-      <div>
+    <div class="flex items-center gap-4 sm:gap-5 mb-5">
+      <div class="shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-white shadow-[0_4px_16px_-4px_rgba(12,37,64,0.25)] bg-gradient-to-br from-[var(--color-azure)] to-[var(--color-ocean)] grid place-items-center">
+          <img
+            src="/profile.jpg"
+            alt={profile.name}
+            class="w-full h-full object-cover"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <span class="hidden w-full h-full items-center justify-center font-display font-bold text-2xl sm:text-3xl text-white" aria-hidden="true">{profile.name.charAt(0)}</span>
+      </div>
+      <div class="min-w-0">
         <div class="text-xs font-mono uppercase tracking-[0.22em] text-[var(--color-aqua)] mb-1">
           Reis op maat
         </div>
         <h2 class="font-display font-bold text-2xl sm:text-3xl leading-tight tracking-tight">
-          Hoe <span class="italic font-light text-[var(--color-azure)]">{profile.name}</span> reist.
+          Hoe ik <span class="italic font-light text-[var(--color-azure)]">reis</span>.
         </h2>
       </div>
     </div>

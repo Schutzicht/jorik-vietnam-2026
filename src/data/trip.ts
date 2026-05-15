@@ -55,7 +55,7 @@ export const trip = {
   startDate: "2026-10-01",
   endDate: "2026-10-25",
   heroImage: unsplash("1652540755628-47f6c1480f0b", 2000),
-  intent: "Even uit Nederland weg. Drie weken in Vietnam om te surfen, in een lager tempo te werken, en ergens lang genoeg blijven om niet elke paar dagen te verkassen. Vibe-wise zoek ik iets als Canggu, maar minder toeristisch.",
+  intent: "Drie weken Vietnam in oktober. Hanoi voor de eerste dagen, Da Nang als homebase voor surf en remote werk, Ho Chi Minh als afsluiter.",
   flights: [
     {
       from: "AMS",
@@ -390,13 +390,125 @@ export const pois: POI[] = [
   { name: "Social Club Saigon", type: "photo", coords: [10.7716, 106.7026], stopId: "hcmc", note: "Rooftop" }
 ];
 
-export const packingList = [
-  { category: "Kleding", items: ["3-4x T-shirt quick-dry", "2x boardshort / bikini", "1x rashguard / lycra", "1x lange broek (tempels)", "1x hoodie", "Slippers + 1x sneaker", "Ondergoed (5-7x)", "1x regenjas"] },
-  { category: "Tech", items: ["Laptop + lader", "Powerbank (10000+ mAh)", "Universele adapter", "Telefoon-lader (USB-C)", "Hoofdtelefoon", "GoPro / camera (optioneel)", "E-reader (optioneel)"] },
-  { category: "Surf", items: ["Wax + leash (bagage-safe)", "Reef-safe zonnebrand", "Surf-cap / hat", "Quick-dry handdoek"] },
-  { category: "Documenten", items: ["Paspoort (geldig 6m+)", "E-visum print", "Reisverzekering kaart", "Vluchtbevestigingen", "Hostel-bookings (eerste paar nachten)"] },
-  { category: "Health", items: ["Imodium / loperamide", "Pijnstillers", "Plakkers + desinfectie", "Muggenspray DEET", "Slaapmasker + oordoppen"] },
-  { category: "Voor vertrek", items: ["Visum aanvragen 2-3w van tevoren", "Reisverzekering checken", "Wise / Revolut kaart geactiveerd", "eSIM of fysieke SIM regelen", "Bank waarschuwen voor reizen", "App van Grab installeren"] }
+export interface PackingGroup {
+  category: string;
+  critical?: boolean;
+  items: string[];
+}
+
+export interface PackingPhase {
+  phase: string;
+  subtitle: string;
+  groups: PackingGroup[];
+}
+
+export const packingPlan: PackingPhase[] = [
+  {
+    phase: "Voor vertrek",
+    subtitle: "Acties om af te ronden in NL",
+    groups: [
+      {
+        category: "Admin",
+        items: [
+          "Visum aanvragen via evisa.gov.vn (2-3w vooraf)",
+          "Reisverzekering checken inclusief diabetes-dekking",
+          "Wise of Revolut kaart activeren",
+          "eSIM of fysieke SIM regelen",
+          "Bank waarschuwen voor reizen Vietnam",
+          "Grab app installeren + account"
+        ]
+      },
+      {
+        category: "Medisch prep",
+        critical: true,
+        items: [
+          "Recept insuline + sensors verzilveren",
+          "Doctor's letter regelen voor douane (insuline, pomp, naalden)",
+          "Diabetes-dekking via verzekering bevestigen",
+          "Voorraad 3 weken + 50% extra berekenen",
+          "Frio koeltas regelen voor vlucht"
+        ]
+      }
+    ]
+  },
+  {
+    phase: "In bagage",
+    subtitle: "Fysieke spullen die mee gaan",
+    groups: [
+      {
+        category: "Diabetes essentials",
+        critical: true,
+        items: [
+          "Insuline (3w + 50% buffer, in Frio koeltas)",
+          "FreeStyle Libre sensors (6-8 stuks)",
+          "Pomp infusion sets + reservoirs",
+          "Batterijen voor pomp (extra set)",
+          "Finger check meter + strips",
+          "Dextro / glucose tabletten",
+          "Glucagon noodspuit",
+          "Naalden + insuline-pen als backup",
+          "Hypo snacks (snelle suiker, voor in tas)",
+          "Doctor's letter (kopie + origineel)"
+        ]
+      },
+      {
+        category: "Kleding",
+        items: [
+          "3-4x T-shirt quick-dry",
+          "2-3x boardshort",
+          "1x rashguard / lycra",
+          "1x lange broek (tempels)",
+          "1x hoodie / lichte sweater",
+          "Slippers + 1x sneaker",
+          "Ondergoed (5-7x)",
+          "1x regenjas / poncho"
+        ]
+      },
+      {
+        category: "Tech",
+        items: [
+          "Laptop + lader",
+          "Powerbank 10000+ mAh",
+          "Universele adapter",
+          "Telefoon-lader (USB-C)",
+          "Hoofdtelefoon",
+          "GoPro of camera (optioneel)",
+          "E-reader (optioneel)"
+        ]
+      },
+      {
+        category: "Surf",
+        items: [
+          "Wax + leash (bagage-safe verpakt)",
+          "Reef-safe zonnebrand",
+          "Surf-cap of hoed",
+          "Quick-dry handdoek"
+        ]
+      },
+      {
+        category: "Documenten",
+        items: [
+          "Paspoort (geldig 6 maanden minimaal)",
+          "E-visum print",
+          "Reisverzekering kaart",
+          "Vluchtbevestigingen + boarding passes",
+          "Hostel-bookings (eerste paar nachten)",
+          "Doctor's letter (medisch)"
+        ]
+      },
+      {
+        category: "Health algemeen",
+        items: [
+          "Imodium / loperamide",
+          "Pijnstillers",
+          "Plakkers + desinfectie",
+          "Muggenspray met DEET",
+          "Slaapmasker + oordoppen",
+          "Probiotica (preventief)"
+        ]
+      }
+    ]
+  }
 ];
 
 export interface BudgetCategory {
