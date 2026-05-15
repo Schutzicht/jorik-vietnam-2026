@@ -53,7 +53,7 @@ export const trip = {
   duration: "~25 dagen",
   window: "Oktober 2026",
   heroImage: unsplash("1652540755628-47f6c1480f0b", 2000),
-  intent: "Solo, langzaam, ergens echt landen. Werk, surf, mensen.",
+  intent: "Als ik full-time in NL werk mis ik het avontuur. Drie weken Vietnam: surf op niveau, andere lucht, één plek echt landen. Canggu-vibe maar minder druk.",
   flights: [
     {
       from: "AMS",
@@ -118,6 +118,18 @@ export const trip = {
   ]
 };
 
+export const profile = {
+  name: "Jorik",
+  surfLevel: "Intermediate",
+  workHours: "10-20u / week",
+  socialMode: "Balans",
+  eatStyle: "Lokaal, niet extreem",
+  rhythm: "Late starter",
+  stayStyle: "Hostel met privé kamer",
+  vibeReference: "Canggu / Uluwatu",
+  seaExperience: ["Bali", "Lombok", "Thailand", "Sri Lanka"]
+};
+
 export const stops: Stop[] = [
   {
     id: "hanoi",
@@ -129,37 +141,50 @@ export const stops: Stop[] = [
     coords: [21.0285, 105.8542],
     image: unsplash("1555921015-5532091f6026"),
     imageCredit: "Photo: Florian Wehde / Unsplash",
-    tagline: "Landen. Pho. Koffie. Old Quarter.",
-    vibe: "Chaotisch, oud, vol scooters. Zachte landing voor je naar het strand zakt.",
-    highlights: ["Old Quarter wandelen", "Egg coffee proberen", "Ninh Binh daytrip"],
+    tagline: "Landen. Pho. Andere energie dan Da Nang.",
+    vibe: "Chaotisch, oud, vol scooters. Compleet andere energie dan het strand zometeen. Drie dagen is genoeg om te landen en het noorden te zien voor je naar je homebase zakt.",
+    highlights: ["Egg coffee crawl", "Train Street avond", "Ninh Binh daytrip (Trang An)"],
     stay: {
       title: "Slapen",
       items: [
-        "Old Quarter (centraal, lawaaiig)",
-        "Hoan Kiem zuid (rustiger)",
-        "~30-45 EUR per nacht"
+        "Hostel met privé kamer: Old Quarter View, La Sinfonia del Rey, Bauhinia Boutique",
+        "Old Quarter (centraal, lawaaiig) of Hoan Kiem zuidkant (rustiger)",
+        "Privé kamer ~25-40 EUR per nacht"
       ]
     },
     cowork: {
       title: "Werken",
-      items: ["Cong Caphe, The Note Coffee (cafes)", "Toong Coworking voor een serieuze dag", "Focus deze dagen op jetlag, niet op werk"]
+      items: [
+        "Late starter: middag-sessies in The Note Coffee of Cong Caphe",
+        "Toong Coworking als je 1 deep-work dag wilt",
+        "Geen membership nodig voor 3 dagen"
+      ]
     },
     food: {
       title: "Eten",
       items: [
-        "Pho Gia Truyen (pho bo)",
+        "Pho Gia Truyen (49 Bat Dan, ochtend-only)",
         "Bun Cha Huong Lien",
         "Banh mi 25",
-        "Egg coffee bij Giang Cafe"
+        "Egg coffee bij Giang Cafe of Cafe Dinh"
       ]
     },
     people: {
       title: "Mensen",
-      items: ["Old Quarter hostels (pub crawls)", "Bia Hoi Corner / Ta Hien", "Couchsurfing Hangouts"]
+      items: [
+        "Skip de Backpackers pub crawls",
+        "Bia Hoi Corner / Ta Hien — krukje, biertje, locals",
+        "Beste connecties komen later in Da Nang, hier just chill"
+      ]
     },
     todo: {
       title: "Doen",
-      items: ["Hoan Kiem Lake (ochtend)", "Train Street", "Temple of Literature", "Ninh Binh daytrip (Trang An)"]
+      items: [
+        "Hoan Kiem Lake — namiddag wandeling",
+        "Train Street avond (rond 19u, mooier dan dag)",
+        "Temple of Literature",
+        "Ninh Binh als daytrip (Trang An boottocht)"
+      ]
     },
     documents: [
       { type: "flight", label: "Heenvlucht KLM", note: "AMS → HAN" },
@@ -178,32 +203,59 @@ export const stops: Stop[] = [
     coords: [16.0544, 108.2022],
     image: unsplash("1720777366540-ca547cbddfa1"),
     imageCredit: "Photo: Nik V / Unsplash",
-    tagline: "Homebase. Surf, co-work, ritme.",
-    vibe: "Nomad-hoofdstad van Vietnam. Strand, co-working, betaalbare appartementen. Hier ga ik echt landen.",
-    highlights: ["My Khe surf-routine", "Co-working bij The Hub", "Hoi An weekendjes", "Hue daytrip"],
+    tagline: "Canggu-vibe van Vietnam. Homebase, surf, ritme.",
+    vibe: "An Thuong is de Canggu van Vietnam — nomad cafes, surf 5min lopen, yoga, smoothie bowls als je het wilt. Maar minder druk dan Bali. Hier ga je echt landen: vast apartement, vaste cafes, surf-routine.",
+    highlights: ["My Khe intermediate sandbar peaks", "10-day pass bij The Hub", "Hoi An weekendjes", "Hue + Hai Van treinrit"],
     stay: {
       title: "Slapen",
-      items: ["An Thuong / My An (nomad-buurt)", "Studio 350-600 EUR/maand", "Eerste 4-5 nachten via Airbnb, daarna lokaal regelen"]
+      items: [
+        "Hostel met privé kamer eerste 4-5 nachten: Sea'sons, Funtastic Sea Da Nang (An Thuong)",
+        "Voor de homebase: studio of 1-bed via FB groep 'Da Nang Apartments For Rent' — 350-500 EUR/maand lokaal regelen",
+        "An Thuong / My An (nomad-buurt, alles op loopafstand)"
+      ]
     },
     cowork: {
       title: "Werken",
-      items: ["The Hub Da Nang (community)", "Surf Town Co-working", "43 Factory Coffee voor cafe-werk", "Day pass ~3-5 EUR"]
+      items: [
+        "Light werk-cadence: koop 10-day pass bij The Hub (~30 EUR) ipv maand",
+        "Late starter friendly: open vanaf 9u, blijft druk tot 19u",
+        "Cafes voor losse uren: 43 Factory Coffee, Nam House"
+      ]
     },
     surf: {
       title: "Surf",
-      items: ["My Khe Beach (hoofdspot)", "Bac My An (minder druk)", "Board huren ~7 EUR/dag", "Beste sessies vroege ochtend"]
+      items: [
+        "Intermediate-niveau: My Khe sandbar peaks zijn perfect in oktober",
+        "Paddle-out makkelijk, kleinere line-ups dan Bali",
+        "Voor pittiger swell: vraag locals naar Non Nuoc",
+        "Board huren ~7 EUR/dag, neem eigen wax + leash mee"
+      ]
     },
     food: {
       title: "Eten",
-      items: ["Mi Quang 1A (lokale spec)", "Banh Xeo Ba Duong", "Madame Lan", "An Thuong: vegan / smoothie bowls"]
+      items: [
+        "Mi Quang 1A (de lokale spec, must)",
+        "Banh Xeo Ba Duong (krokante pancake)",
+        "Bun Cha Ca Ba Vy (vis-noodle soep)",
+        "Skip de smoothie-bowl-cafes tenzij comfort-craving"
+      ]
     },
     people: {
       title: "Mensen",
-      items: ["The Hub events / Surf Town meetups", "Facebook: 'Da Nang Digital Nomads'", "Bamboo 2, Esco Beach (after-work)"]
+      items: [
+        "The Hub events (wo + vr) — niet elke avond, balans",
+        "Surf-meetup zondag-ochtend op My Khe",
+        "An Thuong is klein genoeg dat je dezelfde gezichten ziet"
+      ]
     },
     todo: {
       title: "Doen",
-      items: ["Surf 2-3x per week", "Marble Mountains", "Son Tra scooter-rit", "Ban Co Peak voor zonsopkomst"]
+      items: [
+        "Surf-routine: 3x per week target",
+        "Late-starter friendly: golden hour scooter naar Son Tra",
+        "Marble Mountains in de namiddag (koeler)",
+        "Skip de 5u zonsopkomst-hikes"
+      ]
     },
     sideTrips: [
       {
@@ -248,27 +300,49 @@ export const stops: Stop[] = [
     image: unsplash("1583417319070-4a69db38a482"),
     imageCredit: "Photo: Tron Le / Unsplash",
     tagline: "Afsluiter. Skyline, banh mi, naar huis.",
-    vibe: "Sneller, moderner, kapitalistischer. Korte afsluiter en dan vlucht naar huis.",
-    highlights: ["War Remnants Museum", "Rooftop bars", "Banh mi Huynh Hoa"],
+    vibe: "Sneller, moderner, kapitalistischer. Andere energie als slot — niet om te landen, om te beleven. 3 dagen, dan vlucht.",
+    highlights: ["Banh mi Huynh Hoa (best of trip)", "Rooftop sunset", "War Remnants Museum"],
     stay: {
       title: "Slapen",
-      items: ["District 1 (centraal)", "District 3 (rustiger, beter eten)", "Thao Dien als je relax wilt"]
+      items: [
+        "Hostel met privé kamer: The Common Room Project, Hideout, Vy Khanh House (D1)",
+        "District 1 voor het centrum, District 3 voor lokaal eten",
+        "~25-45 EUR per nacht voor privé kamer"
+      ]
     },
     cowork: {
       title: "Werken",
-      items: ["Dreamplex (D1)", "The Workshop Coffee", "Hou laatste dagen light"]
+      items: [
+        "The Workshop Coffee — koffie + wifi voor losse uurtjes",
+        "Hou werk light, je vliegt over 3 dagen",
+        "Geen co-working membership zinvol"
+      ]
     },
     food: {
       title: "Eten",
-      items: ["Banh Mi Huynh Hoa", "Pho Hoa Pasteur", "Anan Saigon (high-end)", "Ben Thanh street food"]
+      items: [
+        "Banh Mi Huynh Hoa (Le Thi Rieng) — vaak de beste van het land",
+        "Pho Hoa Pasteur — ochtend-only",
+        "Ben Thanh street food (avond, ronde Ton That Thiep)",
+        "Anan Saigon als je een laatste-avond diner wilt"
+      ]
     },
     people: {
       title: "Mensen",
-      items: ["Saigon Outcast events", "Rooftop bars (Social Club)", "Facebook: 'Saigon Expats'"]
+      items: [
+        "Rooftop bars (Social Club, Chill Skybar) — late starter friendly",
+        "Skip Bui Vien tenzij je echt het backpacker-cliche wilt",
+        "Saigon Outcast events"
+      ]
     },
     todo: {
       title: "Doen",
-      items: ["War Remnants Museum", "Notre Dame + Post Office", "Bitexco of rooftop voor uitzicht", "Mekong daytrip (optioneel)"]
+      items: [
+        "Late starter: War Remnants in de namiddag (sluit 17u)",
+        "Notre Dame + Post Office samen, 30min wandel",
+        "Bitexco voor zonsondergang uitzicht",
+        "Skip de 6u-Mekong daytrip"
+      ]
     },
     documents: [
       { type: "flight", label: "Intern: DAD → SGN" },
