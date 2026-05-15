@@ -123,7 +123,7 @@ export const trip = {
 export const profile = {
   name: "Jorik",
   surfLevel: "Intermediate",
-  workHours: "10-20u / week",
+  workHours: "15-20 uur per week",
   socialMode: "Balans",
   eatStyle: "Lokaal, niet extreem",
   rhythm: "Late starter",
