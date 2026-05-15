@@ -53,7 +53,7 @@ export const trip = {
   duration: "~25 dagen",
   window: "Oktober 2026",
   heroImage: unsplash("1652540755628-47f6c1480f0b", 2000),
-  intent: "Als ik full-time in NL werk mis ik het avontuur. Drie weken Vietnam: surf op niveau, andere lucht, één plek echt landen. Canggu-vibe maar minder druk.",
+  intent: "Even uit Nederland weg. Drie weken in Vietnam om te surfen, in een lager tempo te werken, en ergens lang genoeg blijven om niet elke paar dagen te verkassen. Vibe-wise zoek ik iets als Canggu, maar minder toeristisch.",
   flights: [
     {
       from: "AMS",
