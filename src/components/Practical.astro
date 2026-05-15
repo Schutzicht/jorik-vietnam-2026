@@ -110,7 +110,7 @@ const iconMap: Record<string, string> = {
                   </div>
                   <div>
                     <dt class="text-[9px] font-mono uppercase tracking-[0.18em] text-[var(--color-muted)] mb-0.5">Duur</dt>
-                    <dd class={`text-sm font-medium ${flight.duration ? "text-[var(--color-ink)]" : "text-[var(--color-muted)] italic"}`}>{flight.duration || "—"}</dd>
+                    <dd class={`text-sm font-medium ${flight.duration ? "text-[var(--color-ink)]" : "text-[var(--color-muted)] italic"}`}>{flight.duration || "..."}</dd>
                   </div>
                   <div>
                     <dt class="text-[9px] font-mono uppercase tracking-[0.18em] text-[var(--color-muted)] mb-0.5">Airline</dt>
@@ -118,7 +118,7 @@ const iconMap: Record<string, string> = {
                   </div>
                   <div>
                     <dt class="text-[9px] font-mono uppercase tracking-[0.18em] text-[var(--color-muted)] mb-0.5">Vlucht-nr</dt>
-                    <dd class={`text-sm font-medium font-mono ${flight.flightNo ? "text-[var(--color-ink)]" : "text-[var(--color-muted)] italic"}`}>{flight.flightNo || "—"}</dd>
+                    <dd class={`text-sm font-medium font-mono ${flight.flightNo ? "text-[var(--color-ink)]" : "text-[var(--color-muted)] italic"}`}>{flight.flightNo || "..."}</dd>
                   </div>
                   <div class="col-span-1 sm:col-span-3">
                     <dt class="text-[9px] font-mono uppercase tracking-[0.18em] text-[var(--color-muted)] mb-0.5">Booking ref</dt>

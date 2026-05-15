@@ -175,14 +175,14 @@ export const stops: Stop[] = [
       title: "Mensen",
       items: [
         "Skip de Backpackers pub crawls",
-        "Bia Hoi Corner / Ta Hien — krukje, biertje, locals",
+        "Bia Hoi Corner / Ta Hien, krukje, biertje, locals",
         "Beste connecties komen later in Da Nang, hier just chill"
       ]
     },
     todo: {
       title: "Doen",
       items: [
-        "Hoan Kiem Lake — namiddag wandeling",
+        "Hoan Kiem Lake, namiddag wandeling",
         "Train Street avond (rond 19u, mooier dan dag)",
         "Temple of Literature",
         "Ninh Binh als daytrip (Trang An boottocht)"
@@ -206,13 +206,13 @@ export const stops: Stop[] = [
     image: unsplash("1720777366540-ca547cbddfa1"),
     imageCredit: "Photo: Nik V / Unsplash",
     tagline: "Canggu-vibe van Vietnam. Homebase, surf, ritme.",
-    vibe: "An Thuong is de Canggu van Vietnam — nomad cafes, surf 5min lopen, yoga, smoothie bowls als je het wilt. Maar minder druk dan Bali. Hier ga je echt landen: vast apartement, vaste cafes, surf-routine.",
+    vibe: "An Thuong is de Canggu van Vietnam, nomad cafes, surf 5min lopen, yoga, smoothie bowls als je het wilt. Maar minder druk dan Bali. Hier ga je echt landen: vast apartement, vaste cafes, surf-routine.",
     highlights: ["My Khe intermediate sandbar peaks", "10-day pass bij The Hub", "Hoi An weekendjes", "Hue + Hai Van treinrit"],
     stay: {
       title: "Slapen",
       items: [
         "Hostel met privé kamer eerste 4-5 nachten: Sea'sons, Funtastic Sea Da Nang (An Thuong)",
-        "Voor de homebase: studio of 1-bed via FB groep 'Da Nang Apartments For Rent' — 350-500 EUR/maand lokaal regelen",
+        "Voor de homebase: studio of 1-bed via FB groep 'Da Nang Apartments For Rent', 350-500 EUR/maand lokaal regelen",
         "An Thuong / My An (nomad-buurt, alles op loopafstand)"
       ]
     },
@@ -245,7 +245,7 @@ export const stops: Stop[] = [
     people: {
       title: "Mensen",
       items: [
-        "The Hub events (wo + vr) — niet elke avond, balans",
+        "The Hub events (wo + vr), niet elke avond, balans",
         "Surf-meetup zondag-ochtend op My Khe",
         "An Thuong is klein genoeg dat je dezelfde gezichten ziet"
       ]
@@ -302,7 +302,7 @@ export const stops: Stop[] = [
     image: unsplash("1583417319070-4a69db38a482"),
     imageCredit: "Photo: Tron Le / Unsplash",
     tagline: "Afsluiter. Skyline, banh mi, naar huis.",
-    vibe: "Sneller, moderner, kapitalistischer. Andere energie als slot — niet om te landen, om te beleven. 3 dagen, dan vlucht.",
+    vibe: "Sneller, moderner, kapitalistischer. Andere energie als slot, niet om te landen, om te beleven. 3 dagen, dan vlucht.",
     highlights: ["Banh mi Huynh Hoa (best of trip)", "Rooftop sunset", "War Remnants Museum"],
     stay: {
       title: "Slapen",
@@ -315,7 +315,7 @@ export const stops: Stop[] = [
     cowork: {
       title: "Werken",
       items: [
-        "The Workshop Coffee — koffie + wifi voor losse uurtjes",
+        "The Workshop Coffee, koffie + wifi voor losse uurtjes",
         "Hou werk light, je vliegt over 3 dagen",
         "Geen co-working membership zinvol"
       ]
@@ -323,8 +323,8 @@ export const stops: Stop[] = [
     food: {
       title: "Eten",
       items: [
-        "Banh Mi Huynh Hoa (Le Thi Rieng) — vaak de beste van het land",
-        "Pho Hoa Pasteur — ochtend-only",
+        "Banh Mi Huynh Hoa (Le Thi Rieng), vaak de beste van het land",
+        "Pho Hoa Pasteur, ochtend-only",
         "Ben Thanh street food (avond, ronde Ton That Thiep)",
         "Anan Saigon als je een laatste-avond diner wilt"
       ]
@@ -332,7 +332,7 @@ export const stops: Stop[] = [
     people: {
       title: "Mensen",
       items: [
-        "Rooftop bars (Social Club, Chill Skybar) — late starter friendly",
+        "Rooftop bars (Social Club, Chill Skybar), late starter friendly",
         "Skip Bui Vien tenzij je echt het backpacker-cliche wilt",
         "Saigon Outcast events"
       ]

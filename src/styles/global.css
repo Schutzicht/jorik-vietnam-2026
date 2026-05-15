@@ -281,6 +281,15 @@ body {
   box-shadow: 0 2px 6px rgba(12, 37, 64, 0.25);
 }
 
+.view-btn {
+  color: var(--color-muted);
+}
+.view-btn[data-active="true"] {
+  background: var(--color-azure);
+  color: white;
+  box-shadow: 0 2px 8px -2px rgba(2, 132, 199, 0.4);
+}
+
 /* Reveal */
 [data-reveal] {
   opacity: 0;

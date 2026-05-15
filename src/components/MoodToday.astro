@@ -14,7 +14,7 @@ import { moodOptions } from "../data/trip";
             Wat voor dag is het?
           </h3>
           <p class="text-xs text-[var(--color-muted)] mt-1" data-mood-meta>
-            Tik wat je voelt &mdash; ik markeer de spots
+            Tik wat je voelt, ik markeer de spots
           </p>
         </div>
         <button type="button" data-mood-reset class="text-[10px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)] hover:text-[var(--color-ink)] transition hidden">
@@ -102,7 +102,7 @@ import { moodOptions } from "../data/trip";
     resetBtn?.addEventListener("click", () => {
       try { localStorage.removeItem(KEY); } catch {}
       apply(null);
-      if (meta) meta.textContent = "Tik wat je voelt — ik markeer de spots";
+      if (meta) meta.textContent = "Tik wat je voelt, ik markeer de spots";
     });
 
     if (stored) apply(stored);

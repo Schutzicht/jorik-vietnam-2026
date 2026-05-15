@@ -3,26 +3,48 @@ import { trip } from "../data/trip";
 ---
 
 <section class="relative bg-[var(--color-deep)] border-y border-[var(--color-line)]">
-  <div class="max-w-3xl mx-auto px-5 sm:px-8 py-3">
-    <div class="grid grid-cols-3 gap-3 sm:gap-6 items-center text-center sm:text-left">
-      <div>
-        <div class="text-[9px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)]">Vertrek</div>
-        <div class="font-display font-bold text-base sm:text-xl tnum text-[var(--color-ink)]" data-countdown>—</div>
-        <div class="text-[10px] text-[var(--color-muted)]" data-countdown-label>dagen</div>
-      </div>
-      <div class="text-center">
-        <div class="text-[9px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)]">Vietnam · NL</div>
-        <div class="font-display font-bold text-base sm:text-xl tnum text-[var(--color-ink)]">
-          <span data-time-vn>—</span>
-          <span class="text-[var(--color-muted)] mx-0.5 sm:mx-1 font-normal">/</span>
-          <span data-time-nl>—</span>
+  <div class="max-w-3xl mx-auto px-5 sm:px-8 py-3.5 sm:py-4">
+    <div class="flex items-center gap-3 sm:gap-6 overflow-x-auto no-scrollbar -mx-1 px-1">
+      <div class="flex items-center gap-2.5 shrink-0">
+        <div class="w-8 h-8 rounded-lg grid place-items-center bg-[var(--color-azure)]/10 border border-[var(--color-azure)]/25 shrink-0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-aqua)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/>
+          </svg>
         </div>
-        <div class="text-[10px] text-[var(--color-muted)]">+5u tijdsverschil</div>
+        <div class="leading-none">
+          <div class="text-[9px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)]" data-countdown-label>dagen tot vertrek</div>
+          <div class="font-display font-bold text-lg sm:text-xl tnum text-[var(--color-ink)] mt-0.5" data-countdown>...</div>
+        </div>
       </div>
-      <div class="text-right sm:text-left">
-        <div class="text-[9px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)]">€1 =</div>
-        <div class="font-display font-bold text-base sm:text-xl tnum text-[var(--color-ink)]" data-rate>—</div>
-        <div class="text-[10px] text-[var(--color-muted)]"><span data-rate-source>VND</span></div>
+
+      <span class="h-7 w-px bg-[var(--color-line)] shrink-0"></span>
+
+      <div class="flex items-center gap-2.5 shrink-0">
+        <div class="w-8 h-8 rounded-lg grid place-items-center bg-[var(--color-azure)]/10 border border-[var(--color-azure)]/25 shrink-0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-aqua)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+          </svg>
+        </div>
+        <div class="leading-none">
+          <div class="text-[9px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)]">Vietnam / NL</div>
+          <div class="font-display font-bold text-base sm:text-lg tnum text-[var(--color-ink)] mt-0.5 whitespace-nowrap">
+            <span data-time-vn>...</span><span class="text-[var(--color-muted)] mx-1 font-normal text-sm">/</span><span data-time-nl class="text-[var(--color-muted)]">...</span>
+          </div>
+        </div>
+      </div>
+
+      <span class="h-7 w-px bg-[var(--color-line)] shrink-0"></span>
+
+      <div class="flex items-center gap-2.5 shrink-0">
+        <div class="w-8 h-8 rounded-lg grid place-items-center bg-[var(--color-azure)]/10 border border-[var(--color-azure)]/25 shrink-0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-aqua)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H8"/><path d="M12 6v2"/><path d="M12 16v2"/>
+          </svg>
+        </div>
+        <div class="leading-none">
+          <div class="text-[9px] font-mono uppercase tracking-[0.15em] text-[var(--color-muted)]">1 EUR</div>
+          <div class="font-display font-bold text-base sm:text-lg tnum text-[var(--color-ink)] mt-0.5 whitespace-nowrap" data-rate>...</div>
+        </div>
       </div>
     </div>
   </div>
@@ -39,7 +61,7 @@ import { trip } from "../data/trip";
           hour12: false
         }).format(new Date());
       } catch {
-        return "—";
+        return "...";
       }
     };
 
@@ -59,13 +81,13 @@ import { trip } from "../data/trip";
       if (!cd || !cdLabel) return;
       if (diff > 0) {
         cd.textContent = String(diff);
-        cdLabel.textContent = diff === 1 ? "dag" : "dagen";
+        cdLabel.textContent = diff === 1 ? "dag tot vertrek" : "dagen tot vertrek";
       } else if (diff === 0) {
-        cd.textContent = "0";
-        cdLabel.textContent = "vandaag!";
+        cd.textContent = "vandaag";
+        cdLabel.textContent = "boarding day";
       } else if (diff >= -25) {
-        cd.textContent = String(Math.abs(diff));
-        cdLabel.textContent = "dag onderweg";
+        cd.textContent = "dag " + Math.abs(diff);
+        cdLabel.textContent = "onderweg";
       } else {
         cd.textContent = "done";
         cdLabel.textContent = "trip voorbij";
@@ -76,11 +98,13 @@ import { trip } from "../data/trip";
       const cached = sessionStorage.getItem("vn-rate-eur-vnd");
       const cachedTs = sessionStorage.getItem("vn-rate-ts");
       const rateEl = document.querySelector("[data-rate]");
-      const srcEl = document.querySelector("[data-rate-source]");
       if (!rateEl) return;
 
+      const formatRate = (vnd) =>
+        vnd.toLocaleString("nl-NL", { maximumFractionDigits: 0 }) + " ₫";
+
       if (cached && cachedTs && Date.now() - Number(cachedTs) < 3600 * 1000) {
-        rateEl.textContent = Number(cached).toLocaleString("nl-NL", { maximumFractionDigits: 0 }) + " ₫";
+        rateEl.textContent = formatRate(Number(cached));
         return;
       }
 
@@ -90,12 +114,11 @@ import { trip } from "../data/trip";
         const data = await res.json();
         const vnd = data?.rates?.VND;
         if (typeof vnd !== "number") throw new Error();
-        rateEl.textContent = vnd.toLocaleString("nl-NL", { maximumFractionDigits: 0 }) + " ₫";
+        rateEl.textContent = formatRate(vnd);
         sessionStorage.setItem("vn-rate-eur-vnd", String(vnd));
         sessionStorage.setItem("vn-rate-ts", String(Date.now()));
       } catch {
         rateEl.textContent = "~27.000 ₫";
-        if (srcEl) srcEl.textContent = "VND (indicatie)";
       }
     };
 
