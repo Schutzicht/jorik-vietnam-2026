@@ -1,0 +1,121 @@
+---
+import { stops } from "../data/trip";
+import StopCard from "./StopCard.astro";
+---
+
+<section id="stops" class="relative bg-[var(--color-night)] py-14 sm:py-20">
+  <div class="max-w-3xl mx-auto px-5 sm:px-8">
+    <div class="mb-10 sm:mb-14">
+      <div class="text-xs font-mono uppercase tracking-[0.22em] text-[var(--color-aqua)] mb-2">
+        Reis
+      </div>
+      <h2 class="font-display font-bold text-3xl sm:text-5xl leading-[1] tracking-tight">
+        Drie stops.
+      </h2>
+    </div>
+
+    <div class="space-y-12 sm:space-y-16">
+      {stops.map((stop, i) => (
+        <StopCard
+          stop={stop}
+          index={i + 1}
+          isHome={stop.nights >= 10}
+          isLast={i === stops.length - 1}
+        />
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  // Card expand/collapse
+  document.querySelectorAll<HTMLButtonElement>("[data-stop-toggle]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest("[data-stop-card]");
+      if (!card) return;
+      const detail = card.querySelector<HTMLElement>("[data-stop-detail]");
+      const chevron = btn.querySelector<HTMLElement>("[data-toggle-chevron]");
+      if (!detail) return;
+      const isOpen = !detail.classList.contains("hidden");
+      if (isOpen) {
+        detail.classList.add("hidden");
+        btn.setAttribute("aria-expanded", "false");
+        chevron?.style.setProperty("transform", "rotate(0deg)");
+      } else {
+        detail.classList.remove("hidden");
+        btn.setAttribute("aria-expanded", "true");
+        chevron?.style.setProperty("transform", "rotate(180deg)");
+      }
+    });
+  });
+
+  // Tabs
+  document.querySelectorAll<HTMLElement>("[data-tabs]").forEach((tabsEl) => {
+    const card = tabsEl.closest("[data-stop-card]");
+    if (!card) return;
+    const tabs = tabsEl.querySelectorAll<HTMLButtonElement>("[data-tab-id]");
+    const panels = card.querySelectorAll<HTMLElement>("[data-tab-panel]");
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const id = tab.dataset.tabId;
+        tabs.forEach((t) => {
+          const active = t === tab;
+          t.setAttribute("aria-selected", String(active));
+          if (active) {
+            t.classList.add("bg-[var(--color-azure)]", "text-white");
+            t.classList.remove("text-[var(--color-ink-soft)]", "hover:bg-[var(--color-card)]");
+          } else {
+            t.classList.remove("bg-[var(--color-azure)]", "text-white");
+            t.classList.add("text-[var(--color-ink-soft)]", "hover:bg-[var(--color-card)]");
+          }
+        });
+        panels.forEach((p) => {
+          p.classList.toggle("hidden", p.dataset.tabPanel !== id);
+        });
+      });
+    });
+  });
+
+  // Notes: localStorage per stop
+  const storageKey = (id: string) => `vietnam-trip-notes-${id}`;
+  document.querySelectorAll<HTMLTextAreaElement>("[data-notes-input]").forEach((input) => {
+    const id = input.dataset.stopId;
+    if (!id) return;
+    const card = input.closest("[data-stop-card]");
+    const savedFlag = card?.querySelector<HTMLElement>("[data-notes-saved]");
+    const saved = localStorage.getItem(storageKey(id));
+    if (saved) input.value = saved;
+
+    let timer: number | undefined;
+    input.addEventListener("input", () => {
+      if (timer) window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        try {
+          localStorage.setItem(storageKey(id), input.value);
+          if (savedFlag) {
+            savedFlag.style.opacity = "1";
+            window.setTimeout(() => {
+              savedFlag.style.opacity = "0";
+            }, 1400);
+          }
+        } catch {
+          // localStorage quota / privacy mode
+        }
+      }, 350);
+    });
+  });
+
+  // Open card if hash matches
+  const openHash = () => {
+    const hash = window.location.hash;
+    if (!hash || !hash.startsWith("#stop-")) return;
+    const el = document.querySelector(hash);
+    const card = el?.querySelector<HTMLElement>("[data-stop-card]");
+    const btn = card?.querySelector<HTMLButtonElement>("[data-stop-toggle]");
+    if (btn?.getAttribute("aria-expanded") !== "true") {
+      btn?.click();
+    }
+  };
+  window.addEventListener("hashchange", openHash);
+  openHash();
+</script>

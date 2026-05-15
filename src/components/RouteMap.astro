@@ -1,0 +1,132 @@
+---
+import { stops } from "../data/trip";
+
+const mapData = stops.map((s, i) => ({
+  id: s.id,
+  city: s.city,
+  region: s.region,
+  arrival: s.arrival,
+  departure: s.departure,
+  nights: s.nights,
+  coords: s.coords,
+  index: i + 1,
+  isHome: s.nights >= 10,
+  sideTrips: s.sideTrips ?? []
+}));
+const mapDataJson = JSON.stringify(mapData);
+---
+
+<section id="kaart" class="relative py-12 sm:py-16 bg-[var(--color-night)] overflow-hidden">
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="blob" style="width: 500px; height: 500px; background: #0ea5e9; top: -100px; left: -100px; opacity: 0.15;"></div>
+  </div>
+
+  <div class="relative max-w-3xl mx-auto px-5 sm:px-8">
+    <div class="mb-6 sm:mb-8 flex items-end justify-between gap-4">
+      <div>
+        <div class="text-xs font-mono uppercase tracking-[0.22em] text-[var(--color-aqua)] mb-2">
+          Route
+        </div>
+        <h2 class="font-display font-bold text-3xl sm:text-5xl leading-[1] tracking-tight">
+          De kaart.
+        </h2>
+      </div>
+      <ul class="flex flex-wrap gap-2 text-[10px] font-mono uppercase tracking-[0.12em]">
+        <li class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full glass">
+          <span class="inline-block w-2 h-2 rounded-full" style="background: var(--color-azure);"></span>
+          <span class="text-[var(--color-ink-soft)]">Stop</span>
+        </li>
+        <li class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full glass">
+          <span class="inline-block w-2.5 h-2.5 rounded-full" style="background: var(--color-coral);"></span>
+          <span class="text-[var(--color-ink-soft)]">Home</span>
+        </li>
+        <li class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full glass">
+          <span class="inline-block w-2 h-2 rounded-full border-2 border-[var(--color-aqua)]"></span>
+          <span class="text-[var(--color-ink-soft)]">Side</span>
+        </li>
+      </ul>
+    </div>
+
+    <div
+      data-reveal
+      class="relative w-full h-[440px] sm:h-[560px] rounded-3xl overflow-hidden ring-azure"
+    >
+      <div id="route-map" class="absolute inset-0"></div>
+      <div class="absolute top-4 left-4 z-[400] glass-dark px-3 py-1.5 rounded-full text-[10px] font-mono uppercase tracking-[0.15em] text-[var(--color-foam)] pointer-events-none">
+        <span class="text-[var(--color-aqua)]">●</span> Route · Okt 2026
+      </div>
+    </div>
+  </div>
+
+  <script type="module" define:vars={{ mapDataJson }}>
+    import L from "https://esm.sh/leaflet@1.9.4";
+
+    const data = JSON.parse(mapDataJson);
+    const el = document.getElementById("route-map");
+    if (el) {
+      const map = L.map(el, {
+        zoomControl: true,
+        scrollWheelZoom: false,
+        attributionControl: true,
+        tap: true
+      });
+
+      L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          maxZoom: 19,
+          subdomains: "abcd"
+        }
+      ).addTo(map);
+
+      const bounds = L.latLngBounds([]);
+
+      data.forEach((stop) => {
+        const icon = L.divIcon({
+          html: `<div class="stop-pin ${stop.isHome ? "is-home" : ""}"><div class="stop-pin__inner">${stop.index}</div></div>`,
+          className: "",
+          iconSize: stop.isHome ? [50, 50] : [38, 38],
+          iconAnchor: stop.isHome ? [25, 25] : [19, 19]
+        });
+        const m = L.marker(stop.coords, { icon }).addTo(map);
+        m.bindPopup(
+          `<strong>${stop.city}</strong>
+           <span style="color: var(--color-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;">${stop.region}</span><br/>
+           <span style="font-size: 12px; color: var(--color-ink-soft);">${stop.arrival} &ndash; ${stop.departure} &middot; ${stop.nights} nachten</span><br/>
+           <a href="#stop-${stop.id}" style="color: var(--color-aqua); font-size: 12px; font-weight: 600; margin-top: 6px; display: inline-block;">Naar details &rarr;</a>`
+        );
+        bounds.extend(stop.coords);
+
+        (stop.sideTrips || []).forEach((side) => {
+          if (!side.coords) return;
+          const sideIcon = L.divIcon({
+            html: `<div class="side-pin"></div>`,
+            className: "",
+            iconSize: [14, 14],
+            iconAnchor: [7, 7]
+          });
+          const sm = L.marker(side.coords, { icon: sideIcon }).addTo(map);
+          sm.bindPopup(
+            `<strong>${side.name}</strong>
+             <span style="color: var(--color-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;">Side trip · ${stop.city}</span><br/>
+             <span style="font-size: 12px; color: var(--color-ink-soft);">${side.distance} &middot; ${side.duration}</span>`
+          );
+          bounds.extend(side.coords);
+        });
+      });
+
+      const stopCoords = data.map((d) => d.coords);
+      L.polyline(stopCoords, {
+        color: "#0284c7",
+        weight: 3,
+        opacity: 0.85,
+        dashArray: "2 10",
+        lineCap: "round"
+      }).addTo(map);
+
+      map.fitBounds(bounds, { padding: [60, 60] });
+    }
+  </script>
+</section>
